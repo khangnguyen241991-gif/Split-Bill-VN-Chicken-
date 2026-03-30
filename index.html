@@ -200,16 +200,13 @@
         margin-bottom: 2px;
       }
 
-      /* FIX LỖI MẤT SỐ KHI CHỤP HÌNH */
       .input-split {
         width: 45px !important;
         padding: 2px 0 !important;
-        /* Giảm padding ngang về 0 để số có chỗ đứng */
         font-size: 13px !important;
         color: white !important;
         font-weight: bold !important;
         text-align: center !important;
-        /* Căn giữa số */
         background: #1f2937 !important;
         border-radius: 4px !important;
       }
@@ -239,16 +236,16 @@
         gap: 15px;
         font-size: 15px;
         line-height: 1.6;
-        color: #ffffff !important; /* ÉP CHỮ TRẮNG */
+        color: #ffffff !important;
       }
 
       .res-col {
-        color: #ffffff !important; /* ÉP CHỮ TRẮNG CHO CỘT */
+        color: #ffffff !important;
       }
 
       .res-col b {
         font-size: 16px;
-        color: #facc15 !important; /* GIỮ MÀU VÀNG CHO TIÊU ĐỀ */
+        color: #facc15 !important;
         display: block;
         margin-bottom: 8px;
         border-bottom: 1px solid #334155;
@@ -285,7 +282,7 @@
       .paid-row span {
         min-width: 80px;
         font-weight: bold;
-        color: #fff !important; /* ÉP TRẮNG TÊN NGƯỜI TRẢ TRƯỚC */
+        color: #fff !important;
         font-size: 14px;
       }
 
@@ -335,7 +332,6 @@
       }
 
       @media (max-width:900px) {
-
         .container,
         .summary-row,
         #result {
@@ -592,80 +588,41 @@
           taxes.forEach(t => {
             let add = running * t.rate / 100;
             running += add;
-            taxText += `${t.name} ${t.rate}%: ${vnd(add)}
-														
-														<br>`;
+            taxText += `<span style="color:#ffffff">${t.name} ${t.rate}%: ${vnd(add)}</span><br>`;
           });
         } else {
           taxes.forEach(t => {
             let add = running * t.rate / 100;
             running += add;
-            taxText += `${t.name} ${t.rate}%: ${vnd(add)}
-															
-															<br>`;
+            taxText += `<span style="color:#ffffff">${t.name} ${t.rate}%: ${vnd(add)}</span><br>`;
           });
           discVal = Math.min(getD(running), running);
           running -= discVal;
         }
         let ratio = subtotal > 0 ? running / subtotal : 1;
-        let htmlLeft = `
-																
-																<div class="res-col">
-																	<b>🧾 CHI TIẾT</b>`;
+        let htmlLeft = `<div class="res-col"><b style="color:#facc15">🧾 CHI TIẾT</b>`;
         let discLabel = (discountType === 'percent' && discount > 0) ? `Discount (${discountApply==='before'?'Trước':'Sau'} thuế) ${discount}%` : `Discount (${discountApply==='before'?'Trước':'Sau'} thuế)`;
-        let discRow = discount > 0 ? `${discLabel}: -${vnd(discVal)}
-																	
-																	<br>` : '';
-        htmlLeft += `Tạm tính: ${vnd(subtotal)}
-																		
-																		<br>${discRow}${taxText}
-																			
-																			<span class="money-line">Tổng: ${vnd(running)}</span>
-																			<br>
-																				<br>`;
+        let discRow = discount > 0 ? `<span style="color:#ffffff">${discLabel}: -${vnd(discVal)}</span><br>` : '';
+        htmlLeft += `<span style="color:#ffffff">Tạm tính: ${vnd(subtotal)}</span><br>${discRow}${taxText}<span class="money-line" style="color:#ffffff">Tổng: ${vnd(running)}</span><br><br>`;
         people.forEach((p, i) => {
-          if (per[i] > 0) htmlLeft += `${p||'...'}: ${vnd(per[i]*ratio)}
-																				
-																					<br>`;
+          if (per[i] > 0) htmlLeft += `<span style="color:#ffffff">${p||'...'}: ${vnd(per[i]*ratio)}</span><br>`;
         });
-        htmlLeft += `
-																				
-																					</div>`;
-        let htmlRight = `
-																				
-																					<div class="res-col">
-																						<b>💸 THANH TOÁN</b>`;
+        htmlLeft += `</div>`;
+        let htmlRight = `<div class="res-col"><b style="color:#facc15">💸 THANH TOÁN</b>`;
         people.forEach((p, i) => {
           let bal = (paid[i] || 0) - (per[i] * ratio);
           if (Math.abs(bal) < 1) return;
-          if (bal > 0) htmlRight += `${p||'...'}: 
-																						
-																						<span class="money-line text-green">nhận ${vnd(bal)}</span>
-																						<br>`;
-          else htmlRight += `${p||'...'}: 
-																							
-																							<span class="money-line text-orange">thêm ${vnd(-bal)}</span>
-																							<br>`;
+          if (bal > 0) htmlRight += `<span style="color:#ffffff">${p||'...'}: </span><span class="money-line text-green">nhận ${vnd(bal)}</span><br>`;
+          else htmlRight += `<span style="color:#ffffff">${p||'...'}: </span><span class="money-line text-orange">thêm ${vnd(-bal)}</span><br>`;
         });
-        htmlRight += `
-																							
-																							</div>`;
+        htmlRight += `</div>`;
         document.getElementById('result').innerHTML = htmlLeft + htmlRight;
       }
 
       function render() {
         let phtml = '';
         people.forEach((p, i) => {
-          phtml += `
-																							
-																							<div class="person-chip">
-																								<input id="p-input-${i}" value="${p}" 
-                   onfocus="activeFocusId=this.id" 
-                   onblur="activeFocusId=null" 
-                   oninput="people[${i}]=this.value; saveToLocal(); calc();"
-                   onchange="render()">
-																									<span class="btn-remove-person" onclick="removePerson(${i})">×</span>
-																								</div>`;
+          phtml += `<div class="person-chip"><input id="p-input-${i}" value="${p}" onfocus="activeFocusId=this.id" onblur="activeFocusId=null" oninput="people[${i}]=this.value; saveToLocal(); calc();" onchange="render()"><span class="btn-remove-person" onclick="removePerson(${i})">×</span></div>`;
         });
         document.getElementById('peopleTable').innerHTML = phtml;
         let ihtml = '';
@@ -675,58 +632,19 @@
           sortedIndices.forEach(idx => {
             let act = it.active[idx];
             let val = it.alloc[idx] !== undefined ? it.alloc[idx] : "";
-            allocHtml += `
-																								
-																								<div class="action-cell" style="opacity:${act?1:0.3}">
-																									<div class="name-label">${people[idx]||'...'}</div>
-                ${act?`
-																									
-																									<input class="input-split" type="number" placeholder="0" value="${val}" oninput="items[${i}].alloc[${idx}]=parseFloat(this.value); calc();">`:`
-																										
-																										<div style="height:20px"></div>`}
-                
-																										
-																										<button class="btn-mini" style="background:${act?'#475569':'#16a34a'}" onclick="toggleActive(${i}, ${idx})">${act?'Bỏ':'Dùng'}</button>
-																									</div>`;
+            allocHtml += `<div class="action-cell" style="opacity:${act?1:0.3}"><div class="name-label">${people[idx]||'...'}</div>${act?`<input class="input-split" type="number" placeholder="0" value="${val}" oninput="items[${i}].alloc[${idx}]=parseFloat(this.value); calc();">`:`<div style="height:20px"></div>`}<button class="btn-mini" style="background:${act?'#475569':'#16a34a'}" onclick="toggleActive(${i}, ${idx})">${act?'Bỏ':'Dùng'}</button></div>`;
           });
-          ihtml += `
-																									
-																									<tr class="draggable-row" draggable="true" ondragstart="dragStart(${i})" ondragover="dragOver(event)" ondrop="dragDrop(${i})">
-																										<td>
-																											<div class="item-row-content">
-																												<input class="input-name" value="${it.name}" onchange="items[${i}].name=this.value; render();">
-																													<input class="input-price" value="${it.price.toLocaleString('vi-VN')}" oninput="formatInput(this)" onchange="items[${i}].price=parseMoney(this.value); render();"> x 
-                    
-																														
-																														<input class="input-qty" type="number" value="${it.qty}" onchange="items[${i}].qty=parseFloat(this.value)||1; render();">
-																															<span class="item-total">= ${vnd(it.price*it.qty)}</span>
-																														</div>
-																													</td>
-																													<td>
-																														<div class="split-zone">${allocHtml}</div>
-																													</td>
-																													<td style="text-align:center">
-																														<button class="success btn-split-row" onclick="splitRow(${i})">Split</button>
-																														<button class="danger btn-split-row" onclick="items.splice(${i},1); render();">Xóa</button>
-																													</td>
-																												</tr>`;
+          ihtml += `<tr class="draggable-row" draggable="true" ondragstart="dragStart(${i})" ondragover="dragOver(event)" ondrop="dragDrop(${i})"><td><div class="item-row-content"><input class="input-name" value="${it.name}" onchange="items[${i}].name=this.value; render();"><input class="input-price" value="${it.price.toLocaleString('vi-VN')}" oninput="formatInput(this)" onchange="items[${i}].price=parseMoney(this.value); render();"> x <input class="input-qty" type="number" value="${it.qty}" onchange="items[${i}].qty=parseFloat(this.value)||1; render();"><span class="item-total">= ${vnd(it.price*it.qty)}</span></div></td><td><div class="split-zone">${allocHtml}</div></td><td style="text-align:center"><button class="success btn-split-row" onclick="splitRow(${i})">Split</button><button class="danger btn-split-row" onclick="items.splice(${i},1); render();">Xóa</button></td></tr>`;
         });
         document.getElementById('items').innerHTML = ihtml;
         let thtml = '';
         taxes.forEach((t, i) => {
-          thtml += `
-																												
-																												<button class='warning' style="font-size:10px; padding:2px 6px" onclick="taxes.splice(${i},1); render();">${t.name} ${t.rate}% x</button> `;
+          thtml += `<button class='warning' style="font-size:10px; padding:2px 6px" onclick="taxes.splice(${i},1); render();">${t.name} ${t.rate}% x</button> `;
         });
         document.getElementById('taxes-list').innerHTML = thtml;
         let payHTML = '';
         people.forEach((p, i) => {
-          payHTML += `
-																												
-																												<div class="paid-row">
-																													<span>${p||'...'}:</span>
-																													<input value="${(paid[i]||0).toLocaleString('vi-VN')}" oninput="formatInput(this)" onchange="paid[${i}]=parseMoney(this.value); calc();">
-																													</div>`;
+          payHTML += `<div class="paid-row"><span>${p||'...'}:</span><input value="${(paid[i]||0).toLocaleString('vi-VN')}" oninput="formatInput(this)" onchange="paid[${i}]=parseMoney(this.value); calc();"></div>`;
         });
         document.getElementById('paidBox').innerHTML = payHTML;
         saveToLocal();
@@ -789,14 +707,14 @@
           const d = new Date().toISOString().slice(0, 10).split('-');
           const date = `${d[2]}-${d[1]}-${d[0]}`;
           link.download = `Split_Bill_${date}.png`;
-          link.href = canvas.toDataURL();
+          link.href = canvas.toVDataURL ? canvas.toDataURL() : canvas.toDataURL();
           link.click();
           btns.forEach(b => b.style.visibility = 'visible');
         });
       }
 
       function copyResult() {
-        let text = document.getElementById('result').innerText.replace(/\\n\\n/g, '\\n');
+        let text = document.getElementById('result').innerText.replace(/\n\n/g, '\n');
         navigator.clipboard.writeText(text);
         alert("Đã copy!");
       }
